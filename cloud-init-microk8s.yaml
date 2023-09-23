@@ -1,0 +1,59 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+apt:
+  sources:
+    docker.list:
+      source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable
+      keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+
+packages:
+  - docker-ce
+  - python3-venv
+  - python3-pip
+
+runcmd:
+ - [ sh, -c, echo "=========adicionando ubuntu ao grupo do docker=========" ]
+ - sudo gpasswd -a ubuntu docker 
+ - [ sh, -c, echo "=========instalar docker compose (usando pip)=========" ] 
+ - pip install docker-compose
+ - export PATH="/home/ubuntu/.local/bin:$PATH"
+ - [ sh, -c, echo "=========instalar microk8s (último)=========" ] 
+ - sudo snap install microk8s --channel=latest/stable --classic
+ - sudo usermod -a -G microk8s ubuntu
+ - echo "alias k=microk8s.kubectl" >> /home/ubuntu/.bashrc
+ - microk8s enable dashboard dns registry istio
+ - [ sh, -c, echo "=========What did we just install=========" ] 
+ - [ sh, -c, echo "docker:" ] 
+ - [ sh, -c, docker --version ] 
+ - [ sh, -c, echo "docker-compose:" ] 
+ - [ sh, -c, docker-compose --version ] 
+ - [ sh, -c, echo "space on root folder:" ] 
+ - [ sh, -c, df -h / ] 
+ - [ sh, -c, echo "testing microk8s:" ] 
+ - [ sh, -c, microk8s.kubectl version --short ] 
+# - [ sh, -c, comando ] 
+
+
+final_message: "The system is finally up, after $UPTIME seconds"
+
+
+
+# Where are the logs?
+# Cloud-init uses two files to log to:
+# /var/log/cloud-init-output.log
+# : captures the output from each stage of cloud-init when it runs
+# /var/log/cloud-init.log: very detailed log with debugging output, detailing each action taken
+# /run/cloud-init: contains logs about how cloud-init decided to enable or disable itself, as well as what platforms/datasources were detected. These logs are most useful when trying to determine what cloud-init ran or did not run.
+
+# if on ec2, you can check which user-data the instance received with:
+# sudo cat /var/lib/cloud/instance/user-data.txt
+
+#como lançar a instância com bootstrapping:
+#multipass launch --name w1   --cloud-init ./cloud-init-docker.yml --cpus 1 --mem 1G --disk 10G
+#multipass launch --name w2 --cloud-init ./cloud-init-docker.yml --cpus 1 --mem 1G --disk 10G
+#multipass launch --name w4 --cloud-init ./cloud-init-docker.yml --cpus 4 --mem 4G --disk 10G
+
+# multipass launch --name highlander --cloud-init ./cloud-init-docker.yml --cpus 4 --mem 4G --disk 10G
+
