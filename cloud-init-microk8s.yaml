@@ -8,9 +8,11 @@ runcmd:
  - sudo usermod -a -G microk8s ubuntu
  - echo "alias k=microk8s.kubectl" >> /home/ubuntu/.bashrc
  - microk8s enable dashboard dns registry istio
+ - echo "Writing kubeconfig file, just in case"
+ - microk8s config > /home/ubuntu/.kube/config
 
  - [ sh, -c, echo "=========What did we just install=========" ] 
- - [ sh, -c, echo "space on root folder:" ] 
+ - [ sh, -c, echo "Space on root folder:" ] 
  - [ sh, -c, df -h / ] 
  - [ sh, -c, echo "Testing Microk8s:" ] 
  - [ sh, -c, microk8s.kubectl version  ] 
