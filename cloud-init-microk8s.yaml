@@ -19,7 +19,20 @@ runcmd:
 
 final_message: "The system is finally up, after $UPTIME seconds"
 
-
+# Some extra tips, added later. Do this so your load balancers will have external IPs. 
+# 1) Get the IP of your host where microk8s is running. Use command 'ip addr' or 'ifconfig'. It should be the ip address of the eth0 network interface.
+# 2) Add some extra ips to your host in which microk8s is running. Say eth0 IP is '172.22.208.91'. Add a few more with the commands below. 
+# sudo ip addr add 172.22.208.93/24 dev eth0
+# sudo ip addr add 172.22.208.94/24 dev eth0
+# sudo ip addr add 172.22.208.95/24 dev eth0
+# sudo ip addr add 172.22.208.96/24 dev eth0
+# sudo ip addr add 172.22.208.97/24 dev eth0
+# sudo ip addr add 172.22.208.98/24 dev eth0
+# sudo ip addr add 172.22.208.99/24 dev eth0
+# sudo ip addr add 172.22.208.100/24 dev eth0
+# 3) Now enable metallb add-on, with command 'microk8s enable metallb'
+# 4) While enabling metalldb, it will ask for an IP range. In this example, the IP range would be '172.22.208.91-172.22.208.100'.
+# If you need to edit the address pool for metallb after adding it, use this command: k -n metallb-system edit ipaddresspools.metallb.io/default-addresspool  
 
 # Where are the logs?
 # Cloud-init uses two files to log to:
