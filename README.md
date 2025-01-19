@@ -16,3 +16,6 @@ If you get an error like `launch failed: KVM support is not enabled on this mach
  - `multipass shell <name>` to log into a VM
  - `multipass delete <name>` to delete a VM
  - `multipass purge` to get rid of your deleted VMs
+ - `microk8s config > ~/.kube/config` to generate the kubeconfig file for other apps (such as Helm, K9s) to access your cluster.
+ - `multipass mount <local folder> <instance>:<target folder>` To mount a folder from your computer (`local folder`) into the filesystem of your VM. For `instance` put the name of the VM you created. In this example, the name would be `multipass`. 
+ - `microk8s enable metallb` to enable metallb add-on. It will allow you to create working load balancers. While enabling metallb, it will ask for an IP range. In this example, the IP range would be `172.22.208.91-172.22.208.100`.
